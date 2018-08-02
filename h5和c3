@@ -1,0 +1,891 @@
+h5总结
+
+新语义标签
+
+    * header nav aside section article main footer
+
+兼容性处理
+
+    1. ie不兼容main
+    2. ie8及以下的兼容性处理方式
+        * 使用js创建的标签,  ie是可以识别的
+        * html5shiv.js
+        * 判断浏览器的版本, 条件注释
+
+        <!-- let: less or equal: 小于等于ie8 -->
+        <!--[if lte IE 8]>
+            <script>
+                //1. 创建一个header
+                var main = document.createElement("main");
+                //2. 指定为块级元素
+                main.style.display = "block";
+                //3. 添加到body
+                document.body.appendChild(main);
+            </script>
+        <![endif]-->
+
+css3总结
+
+线性渐变
+
+    `linear-gradient(to top, red, green)` `radial-gradient(100px at center, red, orange)`
+
+3d变换
+
+    * 3d有一个z轴,所以可以绕着x轴或y轴移动 translateZ();
+    * 3d有空间,可以绕着x轴或y轴旋转 rotateX(),rotateY();
+    * 如果需要对某个元素添加3d变换, transform-style: preserve-3d;
+    * 日过想要实现近大远小,  就给其父元素添加 perspective: 500px; 越小越明显, 500到1000
+    * transform-origin: 可以改变参照点和旋转轴的位置\
+
+动画(animate)
+
+    1. @keyframes来定义动画的步骤 接动画名称(自定义)
+    2. animation
+
+弹性布局
+
+1. display: flex; 横排；适应父元素的空间
+2. flex-basis： 500px; 优先级比width要高；flex: 1;
+3. flex-wrap: wrap; 子元素换行显示
+4. justify-content: flex-start; //flex-end， center， space-around, space-between
+5. align-items: flex-start // flex-end, center
+6. align-content: flex-start; //flex-end， center， space-around, space-between //只有在多行才会生效
+7. align-self: flex-start // flex-end, center
+8. flex-direction: column; //垂直排列
+
+jsAPI
+
+自定义属性  data-name
+
+拖拽
+
+    * 被拖拽的盒子需要添加一个draggable = true;
+    * 父盒子实现的两个方法: 
+
+        dom.ondragover = function(event) {
+            event.preventDefault;
+        }
+        dom.ondrop = function(){
+            dom.appendChild(dom1)
+        }
+
+本地文件读取
+
+    1. 监听表单元素 onchange
+    2. 拿到选择的图片
+        > var file = this.files[0];
+    3. 创建file Reader对象
+        > var reader = new FileReader();
+    4.  开始读取文件
+        > reader.readAsDataURL(file);
+    5.  使用读取结果
+        > reader.onload = function(){reader.result};
+
+数据的本地储存
+
+    1. window.localstorage   window.sessionStorage
+    2. setItem("key","value)  getItem("key")   removeItem("key")  clear清除所有
+
+地图(获取地理位置)
+
+    1   window.navigator.geolocation.getCurrentPosition(function(location) {
+            var j = location.coords.longtitude;
+            var w = location.coords.latitue;
+        });
+    
+    2 使用百度地图： 密钥
+        //pc上开发，可以使用百度地图的地理位置信息拾取系统，来获取到比较精确的经纬度坐标点
+        http://api.map.baidu.com/lbsapi/getpoint/index.html
+
+video播放的控制
+
+    1   视频操作的方法和属性（api）
+        video.play();
+        video.pause();
+        video.paused; //属性， 返回一个布尔值， 判断当前视频是否处于播放状态
+        video.ontimeupdate //监听视频的播放事件
+        video.currentTime //视频播放当前时间
+        video.duration //视频的总时长
+
+所接触的插件
+
+    1. html5shiv.js  兼容h5语义标签
+    2. fullpage.js  全屏滚动
+    3. Animate.css 动画效果
+    4. echarts 饼状图
+    
+    1. swiper 与滑动， 轮播相关的解决方案
+    2. bootstrap， 响应式布局的解决方案
+    3. zepto, 相当于轻量级的jquery
+    4. mui，移动端类app布局及组件（电商全端阶段）
+
+viewport
+
+    1 viewport 是用户网页的可视区域。翻译为中文可以叫做"视区"。
+
+    2 在pc时代， 所有的网页在开发时，都没有也无需考虑移动端。 移动设备出现以后， 由于手机的屏幕比较小，手机浏览器是把页面放在一个虚拟的"窗口"（viewport）中，通常这个虚拟的"窗口"（viewport）比屏幕宽， 用户可以通过平移和缩放来看网页的不同部分。
+
+    3 但是移动端的页面，是上下滑动的， 并且无需缩放显示， 所以，我们要添加一个meta标签， 指定 viewport的宽度为屏幕的宽度， 避免布局错乱
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    html, body {
+        width: 100%; //就是继承的视区的大小
+    }
+
+执行以下代码会发现： 
+
+    1. 没有添加viewport标签时， viewport的默认宽度是 981px, 比窗口 375px要宽。 用户可以滑动页面来查看完整网页;
+    2. 添加了viewport标签以后， viewport的默认宽度就变成了 375px； `content="width=device-width"` 这是该句代码生效的结果。 img的宽度就是屏幕的宽度， 正常显示了。 
+    3. 结论， 
+        * viewport 比窗口的宽度要大；
+        * 如果不添加 meta标签来指定viewport宽度， 再使用百分比布局时，会出现内容放大的问题
+
+viewport属性解释
+
+- width=device-width：表示宽度是设备屏幕的宽度
+- initial-scale=1.0：表示初始的缩放比例
+- user-scalable=no：表示用户是否可以调整缩放比例
+- minimum-scale=0.5：表示最小的缩放比例
+- maximum-scale=2.0：表示最大的缩放比例
+- 一般指定前三个即可
+
+sass
+
+     1.sass是css的预编译语言,sass不能直接使用,需要编译后使用
+     2.sass可以支持css嵌套
+     3.sass可以将多个css文件合并成一个文件 @import "./common.scss"
+     4.sass支持全局的变量 $a:red 函数@function  混入@minxi @include
+
+sass的循环
+
+1. 继承
+
+    .class1 {
+    　　border: 1px solid #ddd;
+    }
+    
+    .class2 {
+    　　@extend .class1;
+    　　font-size:120%;
+    }
+
+1. 混入
+
+    @mixin roundborder($myborder: 10px) {
+        border-radius: $myborder;
+    }
+    
+    .box {
+        @include roundborder(25px);
+    }
+
+1. 计算
+
+    body {
+    　　margin: (14px/2);
+    　　top: 50px + 100px;
+    　　right: $var * 10%;
+    }
+
+1. 函数
+
+    @function double($n) {
+    　　@return $n * 2;
+    }
+    
+    #sidebar {
+    　　width: double(5px);
+    }
+
+1. 判断和循环
+
+    @for $i from 1 to 8 {
+        &.slide0#{$i} {
+            background: url("../images/02-head-icons/0#{$i}.jpg") no-repeat top left / 100% 100%;
+    
+            @if $i > 5 {
+                border: 3px solid #000;
+            }
+        }
+    }
+
+---
+
+    ruby安装sass编译sass
+    1. 装c盘,检查ruby 2. 安装sass gem install sass检查sass 3. 安装compass gem install compass 4. 终端执行 sass --watch sass:css --style expanded
+
+less
+
+Less 是一门 CSS 预处理语言，它扩展了 CSS 语言，增加了变量、Mixin、函数等特性，使 CSS 更易维护和扩展。
+
+1. less的安装与使用(需要先安装node， 安装完node之后， 可能执行 npm 命令)
+
+    npm install -g less
+
+1. 全局变量
+
+    @background-color: #ffffff;
+    @text-color: #1A237E;
+    
+    p{
+      background-color: @background-color;
+      color: @text-color;
+      padding: 15px;
+    }
+    
+    ul{
+      background-color: @background-color;
+    }
+    
+    li{
+      color: @text-color;
+    }
+
+1. 混入
+
+    #circle{
+      background-color: #4CAF50;
+      border-radius: 100%;
+    }
+    
+    #small-circle{
+      width: 50px;
+      height: 50px;
+      #circle
+    }
+    
+    #big-circle{
+      width: 100px;
+      height: 100px;
+      #circle
+    }
+
+    #circle(@size: 25px){
+        background-color: #4CAF50;
+        border-radius: 100%;
+    
+        width: @size;
+        height: @size;
+    }
+    
+    #small-circle{
+        #circle
+    }
+    
+    #big-circle{
+        #circle(100px)
+    }
+
+1. 嵌套
+
+    ul{
+        background-color: #03A9F4;
+        padding: 10px;
+        list-style: none;
+    
+        li{
+            background-color: #fff;
+            border-radius: 3px;
+            margin: 10px 0;
+        }
+    }
+
+1. 运算
+
+    @div-width: 100px;
+    @color: #03A9F4;
+    
+    div{
+        height: 50px;
+        display: inline-block;
+    }
+    
+    #left{
+        width: @div-width;
+        background-color: @color - 100;
+    }
+    
+    #right{
+        width: @div-width * 2;
+        background-color: @color;
+    }
+
+1. 函数
+
+    @var: #004590;
+    
+    div{
+      height: 50px;
+      width: 50px;
+      background-color: @var;
+    
+      &:hover{
+        background-color: fadeout(@var, 50%)
+      }
+    }
+
+移动web开发的特点
+
+    竖屏排列; 跨平台; 轻量级；屏幕适配；wap站， app内部的网页
+
+设备像素介绍
+
+    1. 物理像素: 就是所谓的分辨率
+    2. 独立像素: 手机的实际窗口 如iphone 6的视窗就是375x667
+    3. 像素比: 物理像素和独立像素的比值 
+        * 当devicePixelRatio值等于1时（也就是最小值），那么它普通显示屏
+        * 当devicePixelRatio值大于1(通常是1.5、2.0、3)，那么它就是高清显示屏。iphone系列有2倍屏， iphone plus系列是3倍屏
+
+bootstrap的使用
+
+    分为全局css样式
+        1. 表格 table table-striped table-bordered table-hover
+        2. 表单三种情况： 
+            1. 所有的介绍文字和表单元素是纵向排列（默认样式）
+            2. 所有文字和表单元素是横向排列
+            3. 表单元素是纵向排列，每个表单元素，文字和input框是横向排列的 
+        3. 响应式工具中的隐藏和显示： visible-xs-*(block， inline, inline-block) hidden-xs
+    组件
+        1. 字体图标（span）
+        2. 下拉框（它不可以作为表单元素直接提交）
+        3. 导航条， 路径导航（面包屑）
+        4. 进度条及定制（加一堆类名）
+        5. 面板
+    栅格
+        1. 元素水平排列
+        2. 每个父盒子默认都被分成了12列
+        3. 在水平方向，如果子元素显示不下了，就会换行显示了
+        4. 可以通过响应式工具类（col-xs-*）设置在不同的屏幕尺寸上面，每个子元素占多少份
+        5. .container(默认两边有padding). .row(左右两边有margin可以抵消container的padding) .col-xs-offset-4
+        6. visible-xs-block; hidden-xs
+    JavaScript插件(模态框)
+        模态框（和面板很像）， 一开始是隐藏的， 需要手动显示 $(".modal").modal("show"); //$(".modal").modal("show");
+    响应式布局
+    ```
+    @media screen and (min-Width: 600px){
+            .box {
+                background-color: skyblue;
+            }
+        }
+    ```
+
+媒体查询设置
+
+1. 设置meta标签
+2. 加载IE兼容文件
+   - 因为IE8既不支持HTML5也不支持CSS3 Media，所以我们需要加载两个JS文件，来保证我们的代码实现兼容效果：
+           <!--加载meta IE兼容文件-->  
+           <!--[if lt IE 9]>  
+           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>  
+           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>  
+           <![endif]-->  
+
+文件上传（jquery fileupload插件）
+
+- 引包
+
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/jquery-fileupload/jquery.ui.widget.js"></script>
+    <script src="lib/jquery-fileupload/jquery.fileupload.js"></script>
+
+- html结构
+
+    <!--
+    1. type:file
+    2. 必须指定name属性，因为后台通过这个name属性去获取图片
+    3. 必须data-url：指定图片上传的地址
+    -->
+    <input type="file" id="fileupload" name="pic1" data-url="/category/addSecondCategoryPic" class="btn btn-default">
+
+- 使用js初始化文件上传
+
+    //初始化文件上传
+    $("#fileupload").fileupload({
+      dataType:"json",
+      //文件上传完成时，会执行的回调函数，通过这个函数就能获取到图片的地址
+      //第二个参数就有上传的结果 data.result
+      done:function (e, data) {
+        //console.log("图片上传完成拉");
+        //console.log(data);
+        //console.log(data.result.picAddr);
+        $(".img_box img").attr("src", data.result.picAddr);
+      }
+    });
+
+上传报错的问题：
+
+在public文件夹下面创建一个upload文件夹，  在upload文件夹下面创建一个brand文件夹，用于存放上传的品牌的图片的
+
+在public文件夹下面创建一个upload文件夹，  在upload文件夹下面创建一个product文件夹，用于存放上传的商品的图片的
+
+基于bootstrap的表单校验插件
+
+引包
+
+- 引入bootstrap-validator的css文件注意bootstrap-validator是bootstrap插件，因此依赖与bootstrap。
+
+<link rel="stylesheet" href="lib/bootstrap-validator/css/bootstrapValidator.css">
+
+<script src="lib/bootstrap-validator/js/bootstrapValidator.js"></script>
+
+初始化表单校验插件
+
+bootstrap-validator插件会在表单提交的时候进行校验，如果校验成功了，表单会继续提交，但是如果校验失败了，就会阻止表单的提交。
+
+    //使用表单校验插件
+    $(formSelector).bootstrapValidator({
+      //1. 指定不校验的类型，默认为[':disabled', ':hidden', ':not(:visible)'],可以不设置
+      // excluded: [':disabled', ':hidden', ':not(:visible)'],
+    
+      //2. 指定校验时的图标显示，默认是bootstrap风格
+      feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+      },
+    
+      //3. 指定校验字段
+      fields: {
+        //校验用户名，对应name表单的name属性
+        username: {
+          validators: {
+            //不能为空
+            notEmpty: {
+              message: '用户名不能为空'
+            },
+            //长度校验
+            stringLength: {
+              min: 6,
+              max: 30,
+              message: '用户名长度必须在6到30之间'
+            },
+            //正则校验
+            regexp: {
+              regexp: /^[a-zA-Z0-9_\.]+$/,
+              message: '用户名由数字字母下划线和.组成'
+            }
+          }
+        },
+      }
+    
+    });
+
+注册表单验证成功事件
+
+当表单校验成功时，会触发success.form.bv事件，此时会提交表单，这时候，通常我们需要禁止表单的自动提交，使用ajax进行表单的提交。
+
+    $("#form").on('success.form.bv', function (e) {
+        e.preventDefault();
+        //使用ajax提交逻辑
+    });
+
+常用方法
+
+获取validator实例(对象)
+
+当我们初始化好表单校验插件时，我们可以通过以下方法来获取表单校验的validator实例，通过validator实例调用一些方法来完成某些功能。
+
+    var validator = $("#form").data('bootstrapValidator');  //获取表单校验实例
+    
+    //使用表单校验实例可以调用一些常用的方法。
+    validator.methodName(params);
+
+
+
+重置表单
+
+重置表单中设置过校验的内容，将隐藏所有错误提示和图标。
+
+    validator.resetForm();//重置表单，并且会隐藏所有的错误提示和图标
+
+更新字段的状态
+
+BootstrapValidator默认在校验某个字段合法后不再重新校验，当调用其他插件或者方法可能会改变字段值时，需要重新对该字段进行校验。可以使用updateStatus(field, status, validatorName)方法更新字段的状态
+
+status的值有：
+
+- NOT_VALIDATED：未校验的
+- VALIDATING：校验中的
+- INVALID ：校验失败的
+- VALID：校验成功的。]
+
+分页插件（bootstrap-pagenator）
+
+引入bootstrap
+
+    <script src="./assets/bootstrap-paginator/bootstrap-paginator.min.js"></script>
+
+添加html
+
+    <ul id="paginator"></ul>
+
+js渲染分页
+
+    /*获取需要初始的元素 使用bootstrapPaginator方法*/
+    $('.pagination').bootstrapPaginator({
+        /*当前使用的是3版本的bootstrap*/
+        bootstrapMajorVersion:3,
+        /*配置的字体大小是小号*/
+        size:'small',
+        /*当前页*/
+        currentPage:pageCurr,
+        /*一共多少页*/
+        totalPages:pageSum,
+        /*点击页面事件*/
+        onPageClicked:function(event, originalEvent, type, page){
+            /*改变当前页再渲染 page当前点击的按钮的页面*/
+            currPage = page;
+            //做其它事
+        }
+    });
+
+修复序号的bug
+
+    因为i每次渲染都是从0开始
+
+    <td>{{(page-1)*size+i+1}}</td>  
+
+zepto 介绍及使用
+
+zepto介绍
+
+    1. Zepto是一个轻量级的针对现代高级浏览器的JavaScript库， 它与jquery有着类似的api。 如果你会用jquery，那么你也会用zepto。
+    2. Zepto的设计目的是提供 jQuery 的类似的API，但并不是100%覆盖 jQuery;
+    3. Zepto是轻量级的js库，只有5-10KB
+    3. zepto是分模块的
+
+Zepto 模块
+
+    1. zepto把各个功能模块单独拆分出来， 放在一个独立的js中，需要时， 引入这个js。 比如说，
+        >  动画功能， 集成在fx.js中， 
+        >  事件监听功能，集成在event.js中， 
+        >  手势功能， 集成成在 touch.js中
+    2. zepto.min.js 默认集成了 核心模块， 事件， ajax表单和ie支持模块
+    3. 如果我们需要添加动画和使用手势（滑动，双击， 长按）需要单独引入对应模块的js文件
+
+  module    	default	description                             
+  zepto     	✔      	核心模块；包含许多方法                             
+  event     	✔      	通过on()& off()处理事件                       
+  ajax      	✔      	XMLHttpRequest 和 JSONP 实用功能             
+  form      	✔      	序列化 & 提交web表单                           
+  ie        	✔      	增加支持桌面的Internet Explorer 10+和Windows Phone 8。
+  fx        	       	The animate()方法                         
+  fx_methods	       	以动画形式的 show, hide, toggle, 和 fade*()方法. 
+  touch     	       	在触摸设备上触发tap– 和 swipe– 相关事件。这适用于所有的touch(iOS, Android)和pointer事件(Windows Phone)。
+  gesture   	       	在触摸设备上触发 pinch 手势事件。                    
+
+Zepto的手势
+
+    1. 手势操作主要是针对移动端的， 包括 轻扫， 双击， 长按， 单击['swipe（滑动）', 'swipeLeft（左滑）', 'swipeRight（右滑）', 'swipeUp（上滑）', 'swipeDown（下滑）',
+    'doubleTap（双击）', 'tap（点击）', 'singleTap（单击）', 'longTap（长按）']
+    
+    2. 测试代码（必须用手机测试， 测试地址 www.tuzeyu.top/zepto）
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scaleable=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <script src="./js/zepto/zepto.js"></script>
+        <script src="./js/zepto/event.js"></script>
+        <script src="./js/zepto/touch.js"></script>
+        <script src="./js/zepto/fx.js"></script>
+        <style>
+            .box, .box1 {
+                width: 200px;
+                height: 200px;
+                background-color: tomato;
+                margin: 10px;
+            }
+        </style>
+    
+    </head>
+    <body>
+        <div class="box"></div>
+        <div class="box1"></div>
+    </body>
+    </html>
+    
+    <script>
+        $(".box").on("swipeLeft", function(){
+            alert("左滑");
+        });
+    
+        $(".box1").on("doubleTap", function(){
+            alert("双击");
+        });
+    
+        $(".box").on("tap", function(){
+            alert("单击");
+        });
+    
+        $(".box1").on("longTap", function(){
+            alert("长按");
+        });
+    </script>
+
+click 300ms延时问题[科普]
+
+    click事件， 在手机上， 默认从点击到执行， 会有300ms的延迟， 为什么呢？ 因为在手机上， 经常需要双击放大网页。 所以， 当用户用手指点一下之后， 浏览器会等300ms， 看看用户是否会点第二次，如果在300ms之内， 用户点了第二次，说明， 用户在做双击的操作。 那么第一次点击就不会执行。 
+    如果300ms之后，用户没有点击第二次，则执行点击事件。 
+    但是这样会影响用户体验。理论上如果禁用掉放大， userscaleable=no;就不会存在延时问题了， 但是iphone的双击放大事件，是不能禁止的。 
+
+手势浏览器默认有四个事件：
+
+    1. touchstart: //手指放到屏幕上时触发  
+    2. touchmove: //手指在屏幕上滑动式触发  
+    3. touchend: //手指离开屏幕时触发 
+    4. touchcancel: //系统取消touch事件的时候触发
+    当用户点击时， 先执行 touchstart事件， 当用户点击结束之后， 执行touchend事件， 那么touchend被触发后，立即执行我们click事件的代码，就可以解决300ms延迟问题了， zepto的tap事件已经封装了这个方法。
+
+相对长度单位
+
+1. 使用绝对长度单位在开发中会遇到什么问题？
+
+    在移动开发过程中，因为手机的屏幕尺寸比较多， 如果使用绝对长度单位， 那么在不同的手机尺寸下面，显示的比例可能不一样。 比如说， 同样30ox * 30px 的div， 在屏幕宽度375px和屏幕宽415px的两个手机上，显示的比例不一样
+
+
+
+2. 怎么解决？
+
+    我们可以使有相对长度单位。 比如说，同样是 375px 和 415px 两个屏屏幕的手要， 屏幕总宽度是10份， 我创建 div 的时候， 用 `5份` 这样的单位， 创建出来的div的宽度就一定是屏幕宽度的一半， 比例就一样了。在css中有一个现成的相对长度单位， 叫rem。 1rem的值是 html的font-size的大小， 默认是16px；
+
+3. 设定份数大小
+
+    1. 拿到屏幕的宽度 document.querySelect("html).style.fontSize = window.screent.Width/10+"px";
+
+5. 在开发过程中怎么使用rem？
+
+    1. 设计人员只会给我们一种尺寸的设计图
+    2. 它是用 px 来标记的
+    3. 一般给的是高清图（以设备的分辨率作为宽高，而不是以css宽度），我们需要把它转成 css 宽度 （640 / 2 = 320）
+        * 除了二倍图之外，也可能给3倍图， 如果3倍图，就要除以3
+    4. 算出每个 px 在设计人员给的这个屏幕尺寸下的 rem的值。转rem的规则都是一样的
+        1. 算出在当前屏幕尺寸下的 1rem值是多少。 320 / 10 = 32px
+        2. 假如说，它标记了某个字体是 24px 对应我们在开发中要用的 那个值是 rem = 24px/32px
+
+6. 打个比方
+
+    买甘蔗，你去买甘蔗，甘蔗有长有短。 （手机的屏幕有宽度不一）
+    但是甘蔗的每一节长度是一样的， 比如都是16厘米（默认的 1rem = 16px = html.fontSize的大小）， 甘蔗长短不一。
+    不管甘蔗的长短，不管什么甘蔗，你的习惯都是买半根。 （创建一个div， 宽度点屏幕宽度的一半）
+    所有的甘蔗， 先分成十份， 数五份, 开始砍。 （html.style.fontSize = window.screenWidth / 10 = 1rem; width: 5rem）
+
+git 总结和扩展
+
+$ git命令总结
+
+    //git 本地版本管理命令
+    git init //初始化一个本地git代码仓库
+    git confit user.name //配置用户名
+    git config user.email //配置用户邮箱 	
+    git status //查看 git 工作区和暂存区 文件状态
+    git add . //将文件从工作区移到暂存区
+    git diff //比较当前版本和之前版本的区别
+    git commit -m "注释文字" //将文件从暂存区提交到代码区，完成一次版本提交
+    git log //查看截止到当前版本的历史记录
+    git reset --hard HEAD^ //将代码回滚到之前版本
+    git reflog //查看所有操作过的历史记录
+    
+    //多人协作开发命令
+    git init --bare //建立一个git服务器代码仓库
+    git clone <服务器地址> //建立一个git服务器代码仓库
+    git push //把本地版本库提交到服务器，类似 svn 的 commit
+    git pull //把将服务器的最新版本拉取到本地，并合并代码，类似 svn 的 update
+    git config --global push.default simple/maching //默认simple，只提交当前分支
+    
+    //tag及分支命令
+    git tag –a 1.0 –m “name” //添加新标签 
+    git tag //查看所有tag
+    git tag -n // 查看所有 tag，带注释
+    git checkout 1.0 //切换到某一标签版本 
+    git show 1.0 //查看某个标签及其对应版本的详细信息
+    git tag -d 1.0 //删除一个版本
+    git push origin 1.0 //将版本推送到服务器
+    
+    //分支相关命令
+    git branch //查看当前分支 
+    git branch -a //查看所有分支
+    git checkou -b dev //创建一个分支 dev， 并切换到该分支
+    git push origin dev //在本地创建一个分支
+    git checkout master //切换到分支 master
+    git branch -D dev //删除本地 dev 分支
+    git git push origin :dev //删除远程 dev 分支
+    git merge dev //将 dev分支合并到当前分支
+
+$ git注意事项
+
+- .git不能修改
+- 提交之前，需要先配置个人信息
+- 在项目新建之前，需要添加 .gitignore文件（工作当中是项目经理的活）
+- push 之前，先执行 commit， 再执行 pull 的操作
+- 项目开发过程中，未经允许，不能修改别人的代码
+- 重要的版本打 tag
+
+$ git扩展
+
+- 配置别名: git 的的命令可以通过配置别名的行式，使命令变得更简单
+        比如说：`$ git config --global alias.st status` 意思是给 `status` 命令配置一个别名 `st`, 敲git st就表示git status
+      
+        $ git config --global alias.st status
+        $ git config --global alias.co checkout
+        $ git config --global alias.ci commit
+        $ git config --global alias.br branch
+        $ git config --global alias.unstage 'reset HEAD'
+        $ git ci -m "bala bala bala..."
+      
+        $ git unstage test.py
+        实际上Git执行的是：
+        $ git reset HEAD test.py
+      
+        $ git config --global alias.last 'log -1'
+        这样，用git last就能显示最近一次的提交：
+      
+        甚至还有人丧心病狂地把lg配置成了：
+        git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+        来看看git lg的效果：
+      
+        git-lg
+
+- 配置文件
+  - 配置Git的时候，加上--global是针对全局的 git 仓库起作用的，如果不加，那只针对当前的仓库起作用。  
+  - 配置文件放哪了？每个仓库的Git配置文件都放在.git/config文件中：
+      $ cat .git/config 
+      [core]
+          repositoryformatversion = 0
+          filemode = true
+          bare = false
+          logallrefupdates = true
+          ignorecase = true
+          precomposeunicode = true
+      [remote "origin"]
+          url = git@github.com:michaelliao/learngit.git
+          fetch = +refs/heads/*:refs/remotes/origin/*
+      [branch "master"]
+          remote = origin
+          merge = refs/heads/master
+      [alias]
+          last = log -1
+  - 全局的Git配置文件放在用户主目录下的一个隐藏文件.gitconfig中：
+      $ cat .gitconfig
+      [alias]
+          co = checkout
+          ci = commit
+          br = branch
+          st = status
+      [user]
+          name = Your Name
+          email = your@email.com
+
+浏览器的缓存机制提供了可以将用户数据存储在客户端上的方式，可以利用cookie,session等跟服务端进行数据交互。
+
+一、cookie和session
+
+cookie和session都是用来跟踪浏览器用户身份的会话方式。
+
+区别：
+
+1、保持状态：
+
+cookie保存在浏览器端，session保存在服务器端
+
+2、使用方式：
+
+    （1）cookie机制：如果不在浏览器中设置过期时间，cookie被保存在内存中，生命周期随浏览器的关闭而结束，这种cookie简称会话cookie。如果在浏览器中设置了cookie的过期时间，cookie被保存在硬盘中，关闭浏览器后，cookie数据仍然存在，直到过期时间结束才消失。Cookie是服务器发给客户端的特殊信息，cookie是以文本的方式保存在客户端，每次请求时都带上它
+
+    （2）session机制：当服务器收到请求需要创建session对象时，首先会检查客户端请求中是否包含sessionid。如果有sessionid，服务器将根据该id返回对应session对象。如果客户端请求中没有sessionid，服务器会创建新的session对象，并把sessionid在本次响应中返回给客户端。通常使用cookie方式存储sessionid到客户端，在交互中浏览器按照规则将sessionid发送给服务器。如果用户禁用cookie，则要使用URL重写，可以通过response.encodeURL(url) 进行实现；API对encodeURL的结束为，当浏览器支持Cookie时，url不做任何处理；当浏览器不支持Cookie的时候，将会重写URL将SessionID拼接到访问地址后。
+
+
+
+3、存储内容：
+
+cookie只能保存字符串类型，以文本的方式；session通过类似与Hashtable的数据结构来保存，能支持任何类型的对象(session中可含有多个对象)
+
+4、存储的大小：
+
+cookie：单个cookie保存的数据不能超过4kb；session大小没有限制。
+
+5、安全性：
+
+    cookie：针对cookie所存在的攻击：Cookie欺骗，Cookie截获；session的安全性大于cookie。
+
+原因如下：
+
+（1）sessionID存储在cookie中，若要攻破session首先要攻破cookie；
+
+（2）sessionID是要有人登录，或者启动session_start才会有，所以攻破cookie也不一定能得到sessionID；
+
+（3）第二次启动session_start后，前一次的sessionID就是失效了，session过期后，sessionID也随之失效。
+
+（4）sessionID是加密的
+
+（5）综上所述，攻击者必须在短时间内攻破加密的sessionID，这很难。
+
+6、应用场景：
+
+    cookie：（1）判断用户是否登陆过网站，以便下次登录时能够实现自动登录（或者记住密码）。如果我们删除cookie，则每次登录必须从新填写登录的相关信息。
+    　　　　（2）保存上次登录的时间等信息。
+    　　　　（3）保存上次查看的页面
+    　　　　（4）浏览计数
+    session：Session用于保存每个用户的专用信息，变量的值保存在服务器端，通过SessionID来区分不同的客户。
+        　　（1）网上商城中的购物车
+        　　（2）保存用户登录信息
+        　　（3）将某些数据放入session中，供同一用户的不同页面使用
+        　　（4）防止用户非法登录
+
+7、缺点：
+
+    cookie：
+    （1）大小受限　　
+    （2）用户可以操作（禁用）cookie，使功能受限
+    （3）安全性较低
+    （4）有些状态不可能保存在客户端。
+    （5）每次访问都要传送cookie给服务器，浪费带宽。
+    （6）cookie数据有路径（path）的概念，可以限制cookie只属于某个路径下。
+    session：
+    （1）Session保存的东西越多，就越占用服务器内存，对于用户在线人数较多的网站，服务器的内存压力会比较大。　　
+    （2）依赖于cookie（sessionID保存在cookie），如果禁用cookie，则要使用URL重写，不安全　　　　　　
+    （3）创建Session变量有很大的随意性，可随时调用，不需要开发者做精确地处理，所以，过度使用session变量将会导致代码不可读而且不好维护。
+
+二、WebStorage
+
+*WebStorage的目的是克服由cookie所带来的一些限制，当数据需要被严格控制在客户端时，不需要持续的将数据发回服务器。
+
+WebStorage两个主要目标：（1）提供一种在cookie之外存储会话数据的路径。（2）提供一种存储大量可以跨会话存在的数据的机制。
+
+HTML5的WebStorage提供了两种API：localStorage（本地存储）和sessionStorage（会话存储）。
+
+    1、生命周期：localStorage:localStorage的生命周期是永久的，关闭页面或浏览器之后localStorage中的数据也不会消失。localStorage除非主动删除数据，否则数据永远不会消失。 sessionStorage的生命周期是在仅在当前会话下有效。sessionStorage引入了一个“浏览器窗口”的概念，sessionStorage是在同源的窗口中始终存在的数据。只要这个浏览器窗口没有关闭，即使刷新页面或者进入同源另一个页面，数据依然存在。但是sessionStorage在关闭了浏览器窗口后就会被销毁。同时独立的打开同一个窗口同一个页面，sessionStorage也是不一样的。`
+    
+    2、存储大小：localStorage和sessionStorage的存储数据大小一般都是：5MB`
+    
+    3、存储位置：localStorage和sessionStorage都保存在客户端，不与服务器进行交互通信。`
+    
+    4、存储内容类型：localStorage和sessionStorage只能存储字符串类型，对于复杂的对象可以使用ECMAScript提供的JSON对象的stringify和parse来处理`
+    
+    5、获取方式：localStorage：window.localStorage;；sessionStorage：window.sessionStorage;。`
+    
+    6、应用场景：localStoragese：常用于长期登录（+判断用户是否已登录），适合长期保存在本地的数据。sessionStorage：敏感账号一次性登录
+
+WebStorage的优点：
+
+    （1）存储空间更大：cookie为4KB，而WebStorage是5MB；
+    （2）节省网络流量：WebStorage不会传送到服务器，存储在本地的数据可以直接获取，也不会像cookie一样美词请求都会传送到服务器，所以减少了客户端和服务器端的交互，节省了网络流量；
+    （3）对于那种只需要在用户浏览一组页面期间保存而关闭浏览器后就可以丢弃的数据，sessionStorage会非常方便；
+    （4）快速显示：有的数据存储在WebStorage上，再加上浏览器本身的缓存。获取数据时可以从本地获取会比从服务器端获取快得多，所以速度更快；
+    （5）安全性：WebStorage不会随着HTTP header发送到服务器端，所以安全性相对于cookie来说比较高一些，不会担心截获，但是仍然存在伪造问题；
+    （6）WebStorage提供了一些方法，数据操作比cookie方便；
+    　　　　setItem (key, value) ——  保存数据，以键值对的方式储存信息。
+        　　 getItem (key) ——  获取数据，将键值传入，即可获取到对应的value值。
+            　　removeItem (key) ——  删除单个数据，根据键值移除对应的信息。
+            　　clear () ——  删除所有的数据
+            　　key (index) —— 获取某个索引的key
+
+
+
+    
+
+
